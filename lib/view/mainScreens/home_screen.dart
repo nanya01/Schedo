@@ -1,10 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:todo_app/firebaseMethods/auth_service.dart';
+import 'package:todo_app/global/global.dart';
 import 'package:todo_app/resources/colors_manager.dart';
+import 'package:todo_app/widgets/progress_bar.dart';
 
-import '../../model/user.dart';
+import '../../model/task.dart';
+import '../../viewModel/home_viewmodel.dart';
+import '../../widgets/category_tile.dart';
+import '../../widgets/task_tile.dart';
+import 'add_task_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -14,21 +20,28 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final AuthService _authService = AuthService();
-  Users? users;
+  final HomeViewModel _homeViewModel = HomeViewModel();
+  String category = "study";
+  String? title;
+
+  chooseCategory(String yourCategory) {
+    setState(() {
+      category = yourCategory;
+    });
+  }
+
+  String? userId;
   @override
   void initState() {
     // TODO: implement initState
-    fetchUserDetails();
-    super.initState();
-  }
-
-  void fetchUserDetails() async {
-    Users user = await _authService.getUserDetails();
-    setState(() {
-      users = user;
+    _homeViewModel.fetchUserDetails();
+    Future.delayed(const Duration(seconds: 5), () {
+      setState(() {
+        userId = _homeViewModel.getUsers.uid;
+      });
     });
-    print("Photo Url: ${users!.photoUrl}");
+
+    super.initState();
   }
 
   @override
@@ -45,10 +58,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 Row(
                   children: [
-                    users?.photoUrl != null
+                    _homeViewModel.getUsers.photoUrl != null
                         ? CircleAvatar(
                             radius: 25,
-                            backgroundImage: NetworkImage("${users!.photoUrl}"),
+                            backgroundImage: NetworkImage(
+                                "${_homeViewModel.getUsers.photoUrl}"),
                           )
                         : CircleAvatar(
                             backgroundColor:
@@ -64,12 +78,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       width: 20,
                     ),
                     Text(
-                      "Hi, ${users?.firstName}",
+                      "Hi, ${_homeViewModel.getUsers.firstName}",
                       style:
                           TextStyle(color: ColorManager.white, fontSize: 20.sp),
                     ),
                     SizedBox(
-                      width: 120.w,
+                      width: 85.w,
                     ),
                     IconButton(
                       icon: const Icon(
@@ -77,9 +91,108 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: ColorManager.white,
                       ),
                       onPressed: () {},
-                    )
+                    ),
+                    IconButton(
+                      icon: const Icon(
+                        Icons.logout,
+                        color: ColorManager.white,
+                      ),
+                      onPressed: () {
+                        firebaseAuth.signOut();
+                      },
+                    ),
                   ],
                 ),
+                SizedBox(
+                  height: 30.h,
+                ),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      CategoryTile(
+                        backgroundColor:
+                            category == "all" ? ColorManager.blue : null,
+                        title: "All",
+                        onPressed: () => chooseCategory("all"),
+                      ),
+                      CategoryTile(
+                        backgroundColor:
+                            category == "study" ? ColorManager.blue : null,
+                        title: "Study",
+                        onPressed: () => chooseCategory("study"),
+                        iconData: Icons.school,
+                        iconDataColor: ColorManager.studyCategoryColor,
+                      ),
+                      CategoryTile(
+                        backgroundColor:
+                            category == "sport" ? ColorManager.blue : null,
+                        title: "Sport",
+                        onPressed: () => chooseCategory("sport"),
+                        iconData: Icons.emoji_events,
+                        iconDataColor: ColorManager.sportsCategoryColor,
+                      ),
+                      CategoryTile(
+                        backgroundColor:
+                            category == "work" ? ColorManager.blue : null,
+                        title: "Work",
+                        onPressed: () => chooseCategory("work"),
+                        iconData: Icons.work,
+                        iconDataColor: ColorManager.workCategoryColor,
+                      ),
+                      CategoryTile(
+                        backgroundColor:
+                            category == "friends" ? ColorManager.blue : null,
+                        title: "Friends",
+                        onPressed: () => chooseCategory("friends"),
+                        iconData: Icons.people,
+                        iconDataColor: ColorManager.friendsCategoryColor,
+                      ),
+                    ],
+                  ),
+                ),
+                category == "all"
+                    ? StreamBuilder<QuerySnapshot>(
+                        stream: FirebaseFirestore.instance
+                            .collection("users")
+                            .doc(userId)
+                            .collection("tasks")
+                            .snapshots(),
+                        builder: (context, snapshot) => snapshot.hasData
+                            ? ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: snapshot.data!.docs.length,
+                                itemBuilder: (context, index) {
+                                  Task task = Task.fromJson(
+                                      snapshot.data!.docs[index].data()
+                                          as Map<String, dynamic>);
+                                  return TaskTile(
+                                    docID: snapshot.data!.docs[index].id,
+                                    task: task,
+                                  );
+                                })
+                            : circularProgress())
+                    : StreamBuilder<QuerySnapshot>(
+                        stream: FirebaseFirestore.instance
+                            .collection("users")
+                            .doc(userId)
+                            .collection("tasks")
+                            .where("category", isEqualTo: category)
+                            .snapshots(),
+                        builder: (context, snapshot) => snapshot.hasData
+                            ? ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: snapshot.data!.docs.length,
+                                itemBuilder: (context, index) {
+                                  Task task = Task.fromJson(
+                                      snapshot.data!.docs[index].data()
+                                          as Map<String, dynamic>);
+                                  return TaskTile(
+                                    docID: snapshot.data!.docs[index].id,
+                                    task: task,
+                                  );
+                                })
+                            : circularProgress())
               ],
             ),
           ),
@@ -100,7 +213,10 @@ class _HomeScreenState extends State<HomeScreen> {
               border: Border.all()),
           child: FloatingActionButton(
             backgroundColor: Colors.transparent,
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (builder) => const AddTaskScreen()));
+            },
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
             child: const Icon(Icons.add),

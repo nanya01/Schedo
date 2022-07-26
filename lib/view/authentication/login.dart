@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:todo_app/firebaseMethods/auth_service.dart';
+import 'package:todo_app/global/global.dart';
 
 import '../../resources/colors_manager.dart';
 import '../../widgets/custom_textfield.dart';
 import '../../widgets/error_dialog.dart';
 import '../../widgets/loading_dialog.dart';
+import '../../widgets/snackbar.dart';
 import '../mainScreens/home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -24,41 +26,46 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController passwordController = TextEditingController();
 
   void loginUser() async {
-    if (_formKey.currentState!.validate()) {
-      showDialog(
-          context: context,
-          builder: (c) {
-            return const LoadingDialog(
-              message: "Checking Credentials",
-            );
+    if (await dataConnection.checkConnectivity()) {
+      if (_formKey.currentState!.validate()) {
+        showDialog(
+            context: context,
+            builder: (c) {
+              return const LoadingDialog(
+                message: "Checking Credentials",
+              );
+            });
+        String message = await _authService.loginUser(
+            emailController.text, passwordController.text);
+        if (message == "success") {
+          Fluttertoast.showToast(msg: "Login successfully");
+          Future.delayed(const Duration(milliseconds: 20), () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (builder) => const HomeScreen()));
           });
-      String message = await _authService.loginUser(
-          emailController.text, passwordController.text);
-      if (message == "success") {
-        Fluttertoast.showToast(msg: "Login successfully");
-        Future.delayed(const Duration(milliseconds: 20), () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (builder) => const HomeScreen()));
-        });
-      } else if (message == "email or password is empty") {
-        showDialog(
-            context: context,
-            builder: (c) {
-              Navigator.pop(context);
-              return const ErrorDialog(
-                message: "email or password is empty",
-              );
-            });
-      } else {
-        showDialog(
-            context: context,
-            builder: (c) {
-              Navigator.pop(context);
-              return ErrorDialog(
-                message: message,
-              );
-            });
+        } else if (message == "email or password is empty") {
+          showDialog(
+              context: context,
+              builder: (c) {
+                Navigator.pop(context);
+                return const ErrorDialog(
+                  message: "email or password is empty",
+                );
+              });
+        } else {
+          showDialog(
+              context: context,
+              builder: (c) {
+                Navigator.pop(context);
+                return ErrorDialog(
+                  message: message,
+                );
+              });
+        }
       }
+    } else {
+      Scaffold.of(context)
+          .showSnackBar(snackBar("Network Error... please try again"));
     }
   }
 
@@ -77,8 +84,8 @@ class _LoginScreenState extends State<LoginScreen> {
               SizedBox(
                   width: MediaQuery.of(context).size.width * 0.5.w,
                   child: Image.asset("assets/images/todo_logo.jpg")),
-              const SizedBox(
-                height: 10,
+              SizedBox(
+                height: 10.h,
               ),
               const Text(
                 "Welcome to Schedo",
@@ -95,8 +102,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       fontSize: 14, color: ColorManager.whiteWithOpacity),
                 ),
               ),
-              const SizedBox(
-                height: 10,
+              SizedBox(
+                height: 10.h,
               ),
               Form(
                 key: _formKey,

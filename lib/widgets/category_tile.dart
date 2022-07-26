@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../resources/colors_manager.dart';
 
@@ -28,18 +29,30 @@ class _CategoryTileState extends State<CategoryTile> {
     return InkWell(
       onTap: widget.onPressed,
       child: Container(
-        color: widget.backgroundColor,
-        child: Row(
-          children: [
-            Icon(
-              widget.iconData,
-              color: widget.iconDataColor,
-            ),
-            Text(
-              widget.title,
-              style: const TextStyle(color: ColorManager.white),
-            )
-          ],
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12.0),
+          color: widget.backgroundColor,
+        ),
+        height: 30.h,
+        width: 100.w,
+        margin: EdgeInsets.only(right: 20.w),
+        padding: EdgeInsets.symmetric(horizontal: 8.w),
+        child: SizedBox(
+          width: 80.w,
+          child: Row(
+            children: [
+              Icon(
+                widget.iconData,
+                color: widget.iconDataColor,
+              ),
+              Expanded(
+                child: Text(
+                  widget.title,
+                  style: const TextStyle(color: ColorManager.white),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

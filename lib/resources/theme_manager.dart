@@ -3,6 +3,7 @@ import 'package:todo_app/resources/colors_manager.dart';
 
 ThemeData getApplicationTheme(BuildContext context) {
   return ThemeData(
+    unselectedWidgetColor: ColorManager.blue,
       scaffoldBackgroundColor: ColorManager.darkBackgroundColor,
       inputDecorationTheme: InputDecorationTheme(
         contentPadding: const EdgeInsets.all(8.0),

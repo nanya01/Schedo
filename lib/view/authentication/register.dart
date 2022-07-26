@@ -2,15 +2,18 @@ import 'dart:io';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:todo_app/firebaseMethods/auth_service.dart';
+import 'package:todo_app/global/global.dart';
 import 'package:todo_app/resources/colors_manager.dart';
 import 'package:todo_app/view/authentication/login.dart';
 import 'package:todo_app/widgets/error_dialog.dart';
 
 import '../../widgets/custom_textfield.dart';
 import '../../widgets/loading_dialog.dart';
+import '../../widgets/snackbar.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -39,46 +42,51 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   void signUpUser() async {
-    if (_formKey.currentState!.validate()) {
-      showDialog(
-          context: context,
-          builder: (c) {
-            return const LoadingDialog(
-              message: "Registering Account",
-            );
-          });
-      String message = await _authService.signUpUser(
-          firstNameController.text,
-          lastNameController.text,
-          emailController.text,
-          passwordController.text,
-          file: _image);
+    if (await dataConnection.checkConnectivity()) {
+      if (_formKey.currentState!.validate()) {
+        showDialog(
+            context: context,
+            builder: (c) {
+              return const LoadingDialog(
+                message: "Registering Account",
+              );
+            });
+        String message = await _authService.signUpUser(
+            firstNameController.text,
+            lastNameController.text,
+            emailController.text,
+            passwordController.text,
+            file: _image);
 
-      if (message == "success") {
-        Fluttertoast.showToast(msg: "Registered successfully");
-        Future.delayed(const Duration(milliseconds: 20), () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (builder) => const LoginScreen()));
-        });
-      } else if (message == "email or password is empty") {
-        showDialog(
-            context: context,
-            builder: (c) {
-              Navigator.pop(context);
-              return const ErrorDialog(
-                message: "email or password is empty",
-              );
-            });
-      } else {
-        showDialog(
-            context: context,
-            builder: (c) {
-              Navigator.pop(context);
-              return ErrorDialog(
-                message: message,
-              );
-            });
+        if (message == "success") {
+          Fluttertoast.showToast(msg: "Registered successfully");
+          Future.delayed(const Duration(milliseconds: 20), () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (builder) => const LoginScreen()));
+          });
+        } else if (message == "email or password is empty") {
+          showDialog(
+              context: context,
+              builder: (c) {
+                Navigator.pop(context);
+                return const ErrorDialog(
+                  message: "email or password is empty",
+                );
+              });
+        } else {
+          showDialog(
+              context: context,
+              builder: (c) {
+                Navigator.pop(context);
+                return ErrorDialog(
+                  message: message,
+                );
+              });
+        }
       }
+    } else {
+      Scaffold.of(context)
+          .showSnackBar(snackBar("Network Error... please try again"));
     }
   }
 
@@ -92,28 +100,28 @@ class _RegisterScreenState extends State<RegisterScreen> {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const SizedBox(
-                height: 70,
+              SizedBox(
+                height: 70.h,
               ),
               GestureDetector(
                 onTap: () {
                   pickImage();
                 },
                 child: CircleAvatar(
-                    radius: MediaQuery.of(context).size.width * 0.2,
+                    radius: MediaQuery.of(context).size.width * 0.2.w,
                     backgroundColor: Colors.white,
                     backgroundImage:
                         _image == null ? null : FileImage(File(_image!.path)),
                     child: _image == null
                         ? Icon(
                             Icons.add_photo_alternate,
-                            size: MediaQuery.of(context).size.width * 0.2,
+                            size: MediaQuery.of(context).size.width * 0.2.w,
                             color: Colors.grey,
                           )
                         : null),
               ),
-              const SizedBox(
-                height: 10,
+              SizedBox(
+                height: 10.h,
               ),
               Form(
                 key: _formKey,
@@ -196,11 +204,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ])
                 ]),
               ),
-              const SizedBox(
-                height: 30,
+              SizedBox(
+                height: 30.h,
               ),
               SizedBox(
-                width: MediaQuery.of(context).size.width - 50,
+                width: MediaQuery.of(context).size.width - 50.w,
                 child: ElevatedButton(
                   onPressed: () {
                     signUpUser();
@@ -213,8 +221,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 30,
+              SizedBox(
+                height: 30.h,
               ),
             ],
           ),
