@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:todo_app/firebaseMethods/auth_service.dart';
 import 'package:todo_app/global/global.dart';
+import 'package:todo_app/view/authentication/register.dart';
 
 import '../../resources/colors_manager.dart';
 import '../../widgets/custom_textfield.dart';
@@ -146,7 +147,11 @@ class _LoginScreenState extends State<LoginScreen> {
                             color: ColorManager.blue, fontSize: 18.sp),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
-                            print('Login Text Clicked');
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (builder) =>
+                                        const RegisterScreen()));
                           })
                   ])
                 ]),

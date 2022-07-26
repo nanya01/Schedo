@@ -21,7 +21,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final HomeViewModel _homeViewModel = HomeViewModel();
-  String category = "study";
+  String category = "all";
   String? title;
 
   chooseCategory(String yourCategory) {

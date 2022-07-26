@@ -54,8 +54,7 @@ class _TaskTileState extends State<TaskTile> {
         confirmDismiss: (direction) {
           if (direction == DismissDirection.endToStart) {
             return Fluttertoast.showToast(
-                msg: "An error occurred",
-                backgroundColor: ColorManager.errorColor);
+                msg: "Task deleted", backgroundColor: ColorManager.errorColor);
           } else {
             return Fluttertoast.showToast(msg: "An error occurred");
           }
