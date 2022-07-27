@@ -3,9 +3,11 @@ import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 import 'package:todo_app/resources/colors_manager.dart';
 import 'package:todo_app/resources/theme_manager.dart';
 import 'package:todo_app/view/authentication/wrapper.dart';
+import 'package:todo_app/viewModel/home_viewmodel.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,11 +24,16 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScreenUtilInit(
         designSize: const Size(360, 690),
-        builder: (context, child) => MaterialApp(
-              debugShowCheckedModeBanner: false,
-              title: 'Flutter Demo',
-              theme: getApplicationTheme(context),
-              home: const SplashScreen(),
+        builder: (context, child) => MultiProvider(
+              providers: [
+                ChangeNotifierProvider(create: (c) => HomeViewModel()),
+              ],
+              child: MaterialApp(
+                debugShowCheckedModeBanner: false,
+                title: 'Flutter Demo',
+                theme: getApplicationTheme(context),
+                home: const SplashScreen(),
+              ),
             ));
   }
 }

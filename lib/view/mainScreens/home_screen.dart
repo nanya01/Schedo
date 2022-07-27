@@ -2,11 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 import 'package:todo_app/global/global.dart';
 import 'package:todo_app/resources/colors_manager.dart';
 import 'package:todo_app/widgets/progress_bar.dart';
 
 import '../../model/task.dart';
+import '../../model/user.dart';
 import '../../viewModel/home_viewmodel.dart';
 import '../../widgets/category_tile.dart';
 import '../../widgets/task_tile.dart';
@@ -20,9 +22,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final HomeViewModel _homeViewModel = HomeViewModel();
   String category = "all";
-  String? title;
 
   chooseCategory(String yourCategory) {
     setState(() {
@@ -30,22 +30,10 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  String? userId;
-  @override
-  void initState() {
-    // TODO: implement initState
-    _homeViewModel.fetchUserDetails();
-    Future.delayed(const Duration(seconds: 5), () {
-      setState(() {
-        userId = _homeViewModel.getUsers.uid;
-      });
-    });
-
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
+    Users users = Provider.of<HomeViewModel>(context).getUsers;
+    String userId = users.uid;
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
@@ -58,11 +46,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 Row(
                   children: [
-                    _homeViewModel.getUsers.photoUrl != null
+                    users.photoUrl != null
                         ? CircleAvatar(
                             radius: 25,
-                            backgroundImage: NetworkImage(
-                                "${_homeViewModel.getUsers.photoUrl}"),
+                            backgroundImage: NetworkImage("${users.photoUrl}"),
                           )
                         : CircleAvatar(
                             backgroundColor:
@@ -78,12 +65,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       width: 20,
                     ),
                     Text(
-                      "Hi, ${_homeViewModel.getUsers.firstName}",
+                      "Hi, ${users.firstName}",
                       style:
                           TextStyle(color: ColorManager.white, fontSize: 20.sp),
                     ),
                     SizedBox(
-                      width: 85.w,
+                      width: 50.w,
                     ),
                     IconButton(
                       icon: const Icon(
@@ -92,14 +79,16 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       onPressed: () {},
                     ),
-                    IconButton(
-                      icon: const Icon(
-                        Icons.logout,
-                        color: ColorManager.white,
+                    Expanded(
+                      child: IconButton(
+                        icon: const Icon(
+                          Icons.logout,
+                          color: ColorManager.white,
+                        ),
+                        onPressed: () {
+                          firebaseAuth.signOut();
+                        },
                       ),
-                      onPressed: () {
-                        firebaseAuth.signOut();
-                      },
                     ),
                   ],
                 ),

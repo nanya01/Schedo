@@ -25,9 +25,9 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     });
   }
 
-  addTask() {
+  addTask() async {
     if (_formKey.currentState!.validate()) {
-      _cloudFirestoreService.setTask(title!, category);
+      await _cloudFirestoreService.setTask(title!, category);
       Fluttertoast.showToast(msg: "Task added successfully");
       Navigator.push(
           context, MaterialPageRoute(builder: (builder) => const HomeScreen()));

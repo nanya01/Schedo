@@ -15,7 +15,7 @@ class CloudFirestoreService {
     return snapshot;
   }
 
-  void setTask(String title, String category) async {
+  setTask(String title, String category) async {
     String dateTime = DateTime.now().millisecondsSinceEpoch.toString();
     var currentDate = DateTime.now();
     int timeCreatedHour = currentDate.hour;
