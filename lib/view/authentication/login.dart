@@ -41,6 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
         if (message == "success") {
           Fluttertoast.showToast(msg: "Login successfully");
           Future.delayed(const Duration(milliseconds: 20), () {
+            Navigator.pop(context);
             Navigator.push(context,
                 MaterialPageRoute(builder: (builder) => const HomeScreen()));
           });

@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/global/global.dart';
 import 'package:todo_app/resources/colors_manager.dart';
+import 'package:todo_app/view/authentication/login.dart';
 import 'package:todo_app/widgets/progress_bar.dart';
 
 import '../../model/task.dart';
@@ -86,6 +87,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         onPressed: () {
                           firebaseAuth.signOut();
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (builder) => const LoginScreen()));
                         },
                       ),
                     ),

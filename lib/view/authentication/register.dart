@@ -61,6 +61,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         if (message == "success") {
           Fluttertoast.showToast(msg: "Registered successfully");
           Future.delayed(const Duration(milliseconds: 20), () {
+            Navigator.pop(context);
             Navigator.push(context,
                 MaterialPageRoute(builder: (builder) => const LoginScreen()));
           });
