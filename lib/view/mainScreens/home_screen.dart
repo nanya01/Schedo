@@ -33,7 +33,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     Users users = Provider.of<HomeViewModel>(context).getUsers;
-    String userId = users.uid;
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
@@ -144,7 +143,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ? StreamBuilder<QuerySnapshot>(
                         stream: FirebaseFirestore.instance
                             .collection("users")
-                            .doc(userId)
+                            .doc(firebaseAuth.currentUser!.uid)
                             .collection("tasks")
                             .snapshots(),
                         builder: (context, snapshot) => snapshot.hasData
@@ -164,7 +163,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     : StreamBuilder<QuerySnapshot>(
                         stream: FirebaseFirestore.instance
                             .collection("users")
-                            .doc(userId)
+                            .doc(firebaseAuth.currentUser!.uid)
                             .collection("tasks")
                             .where("category", isEqualTo: category)
                             .snapshots(),
