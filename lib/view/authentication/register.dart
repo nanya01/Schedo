@@ -13,7 +13,6 @@ import 'package:todo_app/widgets/error_dialog.dart';
 
 import '../../widgets/custom_textfield.dart';
 import '../../widgets/loading_dialog.dart';
-import '../../widgets/snackbar.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -86,8 +85,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         }
       }
     } else {
-      Scaffold.of(context)
-          .showSnackBar(snackBar("Network Error... please try again"));
+      // Scaffold.of(context)
+      //     .showSnackBar(snackBar("Network Error... please try again"));
     }
   }
 

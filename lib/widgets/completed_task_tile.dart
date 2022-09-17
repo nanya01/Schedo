@@ -2,25 +2,22 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:provider/provider.dart';
 import 'package:todo_app/global/global.dart';
-import 'package:todo_app/view/mainScreens/edit_task.dart';
 
 import '../model/task.dart';
 import '../resources/colors_manager.dart';
-import '../viewModel/home_viewmodel.dart';
 
-class TaskTile extends StatefulWidget {
+class CompletedTaskTile extends StatefulWidget {
   final String docID;
   final Task task;
-  const TaskTile({required this.task, required this.docID, Key? key})
+  const CompletedTaskTile({required this.task, required this.docID, Key? key})
       : super(key: key);
 
   @override
-  _TaskTileState createState() => _TaskTileState();
+  _CompletedTaskTileState createState() => _CompletedTaskTileState();
 }
 
-class _TaskTileState extends State<TaskTile> {
+class _CompletedTaskTileState extends State<CompletedTaskTile> {
   IconData categoryIcon() {
     String category = widget.task.category;
     if (category == "study") {
@@ -53,6 +50,7 @@ class _TaskTileState extends State<TaskTile> {
       margin: EdgeInsets.only(top: 30.h),
       decoration: const BoxDecoration(color: ColorManager.tileColor),
       child: Dismissible(
+        direction: DismissDirection.endToStart,
         confirmDismiss: (direction) {
           if (direction == DismissDirection.endToStart) {
             return showDialog(
@@ -91,15 +89,14 @@ class _TaskTileState extends State<TaskTile> {
                   );
                 });
           } else {
-            return Navigator.of(context).push(MaterialPageRoute(
-                builder: (builder) => EditTask(docID: widget.docID)));
+            return Fluttertoast.showToast(msg: "An error occurred");
           }
         },
         background: Container(
           alignment: Alignment.centerLeft,
           padding: const EdgeInsets.symmetric(horizontal: 20),
           color: Colors.green,
-          child: const Icon(Icons.edit, color: Colors.white, size: 32),
+          child: const Icon(Icons.archive_sharp, color: Colors.white, size: 32),
         ),
         secondaryBackground: Container(
           alignment: Alignment.centerRight,
@@ -116,56 +113,25 @@ class _TaskTileState extends State<TaskTile> {
             Fluttertoast.showToast(
                 msg: "Task deleted", backgroundColor: ColorManager.errorColor);
           }
-          if (direction == DismissDirection.startToEnd) {
-            Fluttertoast.showToast(
-                msg: "Task edited",
-                backgroundColor: ColorManager.workCategoryColor);
-          }
         },
         child: ListTile(
-          leading: Checkbox(
-            activeColor: ColorManager.grey,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-            value: widget.task.status,
-            checkColor: Colors.green,
-            onChanged: (bool? value) {
-              setState(() async {
-                widget.task.status = value!;
-                await FirebaseFirestore.instance
-                    .collection("users")
-                    .doc(firebaseAuth.currentUser!.uid)
-                    .collection("tasks")
-                    .doc(widget.docID)
-                    .update({"status": widget.task.status});
-
-                Future.delayed(Duration.zero, () {
-                  Provider.of<HomeViewModel>(context, listen: false)
-                      .getNumberOfCompletedTasks();
-                });
-              });
-              print("Value $value");
-            },
-          ),
           title: Text(widget.task.title,
-              style: TextStyle(
-                  color: widget.task.status ? null : ColorManager.white,
-                  decoration:
-                      widget.task.status ? TextDecoration.lineThrough : null)),
+              style: const TextStyle(
+                color: ColorManager.white,
+              )),
           subtitle: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.watch_later,
-                    color: widget.task.status ? null : ColorManager.white,
+                    color: ColorManager.white,
                   ),
                   Text(
                     widget.task.timeCreated,
-                    style: TextStyle(
-                      color: widget.task.status ? null : ColorManager.white,
+                    style: const TextStyle(
+                      color: ColorManager.white,
                     ),
                   )
                 ],
@@ -174,12 +140,11 @@ class _TaskTileState extends State<TaskTile> {
                 children: [
                   Icon(
                     categoryIcon(),
-                    color: widget.task.status ? null : categoryIconColor(),
+                    color: categoryIconColor(),
                   ),
                   Text(
                     widget.task.category,
-                    style: TextStyle(
-                        color: widget.task.status ? null : ColorManager.white),
+                    style: const TextStyle(color: ColorManager.white),
                   )
                 ],
               ),

@@ -10,7 +10,6 @@ import '../../resources/colors_manager.dart';
 import '../../widgets/custom_textfield.dart';
 import '../../widgets/error_dialog.dart';
 import '../../widgets/loading_dialog.dart';
-import '../../widgets/snackbar.dart';
 import '../mainScreens/home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -66,8 +65,8 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       }
     } else {
-      Scaffold.of(context)
-          .showSnackBar(snackBar("Network Error... please try again"));
+      // Scaffold.of(context)
+      //     .showSnackBar(snackBar("Network Error... please try again"));
     }
   }
 

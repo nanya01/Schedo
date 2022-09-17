@@ -18,8 +18,8 @@ class CloudFirestoreService {
   setTask(String title, String category) async {
     String dateTime = DateTime.now().millisecondsSinceEpoch.toString();
     var currentDate = DateTime.now();
-    int timeCreatedHour = currentDate.hour;
-    int timeCreatedMinute = currentDate.minute;
+    String timeCreatedHour = currentDate.hour.toString();
+    String timeCreatedMinute = currentDate.minute.toStringAsFixed(2);
 
     await firestore
         .collection("users")
@@ -29,6 +29,23 @@ class CloudFirestoreService {
         .set({
       "title": title,
       "category": category,
+      "timeCreated": "$timeCreatedHour:$timeCreatedMinute",
+      "status": false
+    });
+  }
+
+  updateTask(String title, String docID) async {
+    var currentDate = DateTime.now();
+    String timeCreatedHour = currentDate.hour.toString();
+    String timeCreatedMinute = currentDate.minute.toStringAsFixed(2);
+
+    await firestore
+        .collection("users")
+        .doc(firebaseAuth.currentUser!.uid)
+        .collection("tasks")
+        .doc(docID)
+        .update({
+      "title": title,
       "timeCreated": "$timeCreatedHour:$timeCreatedMinute",
       "status": false
     });
