@@ -1,10 +1,7 @@
 # SCHEDO APP (A task manager app)
 
-![projectImage](https://user-images.githubusercontent.com/65512288/134526196-27992ba6-37b5-4a8e-9aff-b790c389680a.jpeg)
 
-
-
-![projectImage](https://github.com/nanya01/Schedo/issues/1#issue-1390763986)
+https://user-images.githubusercontent.com/65512288/193028729-7f589ff4-4ec8-4dac-9df2-c976ab09dde2.mp4
 
 
 ## Getting Started
@@ -23,7 +20,7 @@ samples, guidance on mobile development, and a full API reference.
 
 ### Table of Contents
 - [Description](#description)
-- [Installation](#Installation)
+- [Installation](#installation)
 - [References](#references)
 - [Author Info](#author-info)
 
@@ -39,7 +36,7 @@ It is a task manager app that helps to set our tasks and help the user achieve m
 ---
 
 ## Installation
-
+- Build the [apk](https://drive.google.com/file/d/1ky_0G5Nzhtn6Wz1DspcbB3WW-OG5gnqX/view?usp=sharing)
 - Clone the github repository
 
 
