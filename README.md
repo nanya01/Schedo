@@ -4,7 +4,7 @@
 
 
 
-![projectImage](https://user-images.githubusercontent.com/65512288/193027579-b1f4de07-99c9-4c6a-b6e8-ded1f49b4379.mp4)
+![projectImage](https://github.com/nanya01/Schedo/issues/1#issue-1390763986)
 
 
 ## Getting Started
