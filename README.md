@@ -36,7 +36,7 @@ It is a task manager app that helps to set our tasks and help the user achieve m
 ---
 
 ## Installation
-- Build the [apk](https://drive.google.com/file/d/1ky_0G5Nzhtn6Wz1DspcbB3WW-OG5gnqX/view?usp=sharing)
+- Install the [apk](https://drive.google.com/file/d/1ky_0G5Nzhtn6Wz1DspcbB3WW-OG5gnqX/view?usp=sharing)
 - Clone the github repository
 
 
