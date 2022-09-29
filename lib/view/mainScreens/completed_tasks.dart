@@ -70,37 +70,18 @@ class CompletedTasks extends StatelessWidget {
                               });
                         } else {
                           return Column(
-                            children: [
-                              const SizedBox(
+                            children: const [
+                              SizedBox(
                                 height: 60,
                               ),
-                              const Text(
-                                "No task created",
+                              Text(
+                                "No Task Completed",
                                 style: TextStyle(
                                     fontSize: 20, color: Colors.white),
                               ),
-                              const SizedBox(
+                              SizedBox(
                                 height: 20,
                               ),
-                              RichText(
-                                  text: const TextSpan(
-                                      text: "Click on the ",
-                                      style: TextStyle(
-                                          fontSize: 16, color: Colors.white),
-                                      children: [
-                                    TextSpan(
-                                      text: " + ",
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        color: Color(0xffFF9061),
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text: "button to create a new task",
-                                      style: TextStyle(
-                                          fontSize: 16, color: Colors.white),
-                                    )
-                                  ]))
                             ],
                           );
                         }
