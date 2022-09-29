@@ -1,6 +1,10 @@
-# SCHEDO APP (A TASK MANAGER APP)
+# SCHEDO APP (A task manager app)
 
 ![projectImage](https://user-images.githubusercontent.com/65512288/134526196-27992ba6-37b5-4a8e-9aff-b790c389680a.jpeg)
+
+
+
+![projectImage](https://user-images.githubusercontent.com/65512288/193027579-b1f4de07-99c9-4c6a-b6e8-ded1f49b4379.mp4)
 
 
 ## Getting Started
